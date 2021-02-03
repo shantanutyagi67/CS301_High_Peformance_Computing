@@ -9,10 +9,9 @@ int main()
     long long int maxSize = pow(2, 29);
     long long int total = maxSize;
 
-    FILE *outfile1, *outfile2, *outfile3;
-    outfile1 = fopen("total.txt", "w");
-    outfile2 = fopen("mem.txt", "w");
-    outfile3 = fopen("comp.txt", "w");
+    FILE *outfile1, *outfile2;
+    outfile1 = fopen("add.txt", "w");
+    outfile2 = fopen("div.txt", "w");
 
     int power = 8;
     long long int size;
@@ -26,17 +25,9 @@ int main()
         double *A = (double*)malloc(size * sizeof(double));
         double *B = (double*)malloc(size * sizeof(double));
         double *C = (double*)malloc(size * sizeof(double));
-        double *D = (double*)malloc(size * sizeof(double));
         double v1=101,v2=102,v3=103,v4=104;
 
         /* Check to make sure that we got the allocated memory. */
-        if (D == NULL) {
-            fprintf(stderr, "Unable to allocate enough memory for array!\n");
-            return -1;
-        } else {
-            double allocated = (double)(size * sizeof(double) * 4)/(1024*1024);
-            printf("Memory Allocated: %.3f MB\n", allocated);
-        }
 
         // initialize B C D arrays with random values
         long long int i;
@@ -45,7 +36,6 @@ int main()
         {
             B[i] = 100+rand()/100;
             C[i] = 100+rand()/100;
-            D[i] = 100+rand()/100;
         }
 
         clock_t start_time = clock();
@@ -54,7 +44,8 @@ int main()
         {
             for(j = 0; j < size; j++)
             {
-                A[j] = B[j] + C[j]*D[j];
+                A[j] = B[j] + C[j];
+                if(1==0);
             }
         }
         // calculate cpu usage time
@@ -62,9 +53,8 @@ int main()
         double cpu_time_used = ((double) (end_time - start_time)) / CLOCKS_PER_SEC;
         // calculate throughput
         double throughput = (sizeof(double)*2*total)/cpu_time_used;
-        printf("\npower: %d\tsize: %lld\tthroughput: %.2f\n", power, size, throughput);
         // write throughput to file
-        fprintf(outfile1, "%.2f,", throughput);
+        fprintf(outfile1, "%.3f,", cpu_time_used);
 		
 		clock_t start_time2 = clock();
         // running vector triad
@@ -72,31 +62,25 @@ int main()
         {
             for(j = 0; j < size; j++)
             {
-            	v1 = v2 + v3*v4;
-            	if(1==0);
-            	if(2==0);
+            	A[j] = B[j]/C[j];
+            	if(1==2);
                 
             }
         }
         clock_t end_time2 = clock();
         double comp_time_used = ((double) (end_time2 - start_time2)) / CLOCKS_PER_SEC;
         double comp = (sizeof(double)*4*total)/comp_time_used;
-		double mem_time_used = cpu_time_used - comp_time_used;
-		double mem = (sizeof(double)*2*total)/mem_time_used;
-		fprintf(outfile2, "%.5f,", mem_time_used);
-		fprintf(outfile3, "%.5f,", comp_time_used);
+		fprintf(outfile2, "%.3f,", comp_time_used);
         power += 1;
 
         free(A);
         free(B);
         free(C);
-        free(D);
 
         printf("\n--------------------------------------------------\n\n");
     }
     fclose(outfile1);
 	fclose(outfile2);
-	fclose(outfile3);
     printf("\n\n----------------------------Vijayee Bhavah----------------------------\n\n");
 
     return 0;
