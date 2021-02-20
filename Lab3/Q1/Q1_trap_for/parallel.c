@@ -82,9 +82,6 @@ int main(int argc, char* argv[])
                 x=((double)i+0.5)*step;
                 sum+=4/(1+x*x);
              }
-       
-       
-     
      }
      ans=sum*step;
 	

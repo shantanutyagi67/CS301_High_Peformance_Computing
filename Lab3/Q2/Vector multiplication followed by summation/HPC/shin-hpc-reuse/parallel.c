@@ -61,29 +61,30 @@ int main(int argc, char* argv[])
 	sprintf(outputFileName,"output/%s_%s_%s_%s_output.txt",problem_name,approach_name,argv[1],argv[2]);	
 
 	//**********************
-	int *a, *b, *c, *d;
+	int *a, *b, sum, temp;
 	a = (int*)malloc(sizeof(int)*N);
 	b = (int*)malloc(sizeof(int)*N);
-	c = (int*)malloc(sizeof(int)*N);
-	d = (int*)malloc(sizeof(int)*N);
 	srand(NULL);
 	int i;
 	for(i = 0; i < N; i++){
-		b[i] = rand();
-		c[i] = rand();
-		d[i] = rand();
+		a[i] = rand()%100;
+		b[i] = rand()%100;
 	}
 	//**********************
 	omp_set_num_threads(P);
 	clock_gettime(CLK, &start_alg);	/* Start the algo timer */
 
 	/*----------------------Core algorithm starts here----------------------------------------------*/
-	#pragma omp parallel
+	#pragma omp parallel private(temp) shared(sum)
 	{
+		temp=0;
 		#pragma omp for
-		for(i = 0; i < N; i++){
-			a[i] = b[i] + c[i]*d[i];
+		for(i=0;i<N;i++)
+		{
+			temp=a[i]*b[i];
 		}
+		#pragma atomic 
+		sum=sum+temp;
 	}
 	/*----------------------Core algorithm finished--------------------------------------------------*/
 
